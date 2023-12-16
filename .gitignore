@@ -1,6 +1,5 @@
 # Ignore virtual environment
 venv/
-*dockerfiles
 *scripts
 *tree.txt
 *.env
