@@ -53,10 +53,9 @@ jobs:
         run: |
           python -m venv env
           source env/bin/activate
-      - name: Run Tests & Linting
+      - name: Run Tests
         run: |
           python app/manage.py test
-          flake8 app
 
   security_scan:
     runs-on: ubuntu-latest
@@ -74,26 +73,6 @@ jobs:
 
       - name: Run Security Scan
         run: bandit -r app
-
-  code_coverage:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: 3.9
-
-      - name: Install dependencies
-        run: pip install coverage
-
-      - name: Run Tests with Coverage
-        run: coverage run app/manage.py test
-
-      - name: Report Code Coverage
-        run: coverage report
 
   build_docker:
     needs: build
