@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # AWS CLI installation (if not already installed)
 if ! command -v aws &> /dev/null; then
     echo "Installing AWS CLI..."
