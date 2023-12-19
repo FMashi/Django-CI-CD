@@ -1,0 +1,27 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: ["Check", "Build"]
+    types:
+      - completed
+
+jobs:
+  deploy-to-aws:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Authenticate with AWS ECR
+        run: |
+          aws ecr get-login-password --region your-aws-region | docker login --username AWS --password-stdin your-aws-account-id.dkr.ecr.your-aws-region.amazonaws.com
+
+      - name: Pull Docker image from Docker Hub
+        run: docker pull fmashi/django-app:latest
+
+      - name: Tag Docker image for AWS ECR
+        run: docker tag fmashi/django-app:latest your-aws-account-id.dkr.ecr.your-aws-region.amazonaws.com/your-ecr-repo:latest
+
+      - name: Push Docker image to AWS ECR
+        run: docker push your-aws-account-id.dkr.ecr.your-aws-region.amazonaws.com/your-ecr-repo:latest
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
