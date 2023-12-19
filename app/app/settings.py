@@ -81,13 +81,11 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DB_DATABASENAME = config('POSTGRES_DBNAME', default='')
-DB_USERNAME = config('POSTGRES_USER', default='')
-DB_PASSWORD = config('POSTGRES_PASSWORD', default='')
-DB_HOST = config('POSTGRES_HOST', default='')
-DB_PORT = config('POSTGRES_PORT', default='')
-POSTGRES_READY = config('POSTGRES_READY', default='', cast=bool)
-
+DB_NAME = config('DB_NAME', default='')
+DB_USER = config('DB_USER', default='')
+DB_PASSWORD = config('DB_PASSWORD', default='')
+DB_HOST = config('DB_HOST', default='')
+DB_PORT = config('DB_PORT', default='')
 if os.getenv('GITHUB_WORKFLOW'):
     DATABASES = {
         'default': {
@@ -99,6 +97,7 @@ if os.getenv('GITHUB_WORKFLOW'):
             'PORT': '5432'
         }
     }
+    print("Using Github actions DB.")
 else:
     DATABASES = {
         'default': {
@@ -106,10 +105,11 @@ else:
             'NAME': os.getenv('DB_NAME'),
             'USER': os.getenv('DB_USER'),
             'PASSWORD': os.getenv('DB_PASSWORD'),
-            'HOST': os.getenv('DB_HOST'),
+            'HOST': 'postgres',
             'PORT': os.getenv('DB_PORT')
         }
     }
+    print("Using PostgreSQL database.")
 
 CACHES = {
     'default': {
